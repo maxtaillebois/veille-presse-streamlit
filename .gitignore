@@ -1,0 +1,56 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+
+# Distribution
+dist/
+build/
+*.egg-info/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Fichiers de sortie (generes par l'app)
+compilation_veille_*.pdf
+compilation_veille_*_recap.docx
+*_recap.txt
+veille_presse_*.docx
+
+# Donnees locales (recuperees depuis Google Drive en prod)
+veille_data.json
+RP-*/
+
+# Workflows N8N (pas necessaires pour le deploiement Streamlit)
+n8n_workflows/
+
+# PDF de presse (sur Google Drive)
+*.pdf
+
+# Guides d'installation locale (plus necessaires en cloud)
+GUIDE_INSTALLATION_WINDOWS.*
+LANCER_VEILLE_PRESSE.*
+
+# Logs
+*.log
+
+# Streamlit
+.streamlit/secrets.toml
+
+# Fichiers temporaires
+*.tmp
+_temp_*
