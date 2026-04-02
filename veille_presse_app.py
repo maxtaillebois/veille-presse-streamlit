@@ -531,11 +531,10 @@ def render_veille_interne(drive_files, api_key, pdf_drive_index):
 
                 if context:
                     highlighted = highlight_keywords_html(context, keywords_found)
-                    with st.expander("Voir le contexte de citation", expanded=False):
-                        st.markdown(
-                            f'<div class="context-text">{highlighted}</div>',
-                            unsafe_allow_html=True
-                        )
+                    st.markdown(
+                        f'<div class="context-text"><b>Contexte de citation :</b> {highlighted}</div>',
+                        unsafe_allow_html=True
+                    )
 
             with col_select:
                 is_selected = st.checkbox(
@@ -637,8 +636,8 @@ def render_ush_panorama(drive_files, api_key):
     if theme_filter != "Tous":
         displayed_articles = [a for a in articles if a.get('theme') == theme_filter]
 
-    for article in displayed_articles:
-        article_id = article.get('id', '')
+    for i, article in enumerate(displayed_articles):
+        article_id = article.get('id', f'ush_{i}')
         media = article.get('media', 'Media inconnu')
         title = article.get('title', 'Titre inconnu')
         date = article.get('date', 'Date inconnue')
@@ -646,6 +645,8 @@ def render_ush_panorama(drive_files, api_key):
         media_type = article.get('media_type', '')
         theme = article.get('theme', '')
         link = article.get('link', '')
+        summary = article.get('summary', '')
+        pdf_filename = article.get('fileName', '')
 
         with st.container():
             col_main, col_select = st.columns([5, 1])
@@ -667,6 +668,15 @@ def render_ush_panorama(drive_files, api_key):
                 if author:
                     badges_html += f'<span class="author-badge">{author}</span> '
                 st.markdown(badges_html, unsafe_allow_html=True)
+
+                if pdf_filename:
+                    st.caption(f"📎 {pdf_filename}")
+
+                if summary:
+                    st.markdown(
+                        f'<div class="summary-text"><b>Resume :</b> {summary}</div>',
+                        unsafe_allow_html=True
+                    )
 
             with col_select:
                 is_selected = st.checkbox(
