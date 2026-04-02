@@ -30,8 +30,12 @@ from datetime import datetime
 
 # ==================== CONFIGURATION ====================
 
-# ID du dossier Google Drive partage (contient les PDF + veille_data.json + ush_panorama_data.json)
+# ID du dossier Google Drive racine (contient les JSON)
 GDRIVE_FOLDER_ID = "15MwTpntChfAgDQYiDSvc5cJ0KYmuW9_p"
+
+# ID des sous-dossiers PDF
+GDRIVE_PROCIVIS_FOLDER_ID = "1YE7ujqxV4kAiJcdzCkzy0W-BDmdok9BB"
+GDRIVE_USH_FOLDER_ID = "1N6p3jI6B6-BPpCHKGwxxUzsI3IaGgaIi"
 
 # URL du webhook N8N pour l'envoi du mail a Stephanie
 N8N_WEBHOOK_URL = "https://maximetaillebois.app.n8n.cloud/webhook/veille-presse-envoi"
@@ -732,19 +736,27 @@ def main():
     # ===== CHARGEMENT DES FICHIERS DRIVE =====
     with st.spinner("Chargement depuis Google Drive..."):
         drive_files = list_drive_files(GDRIVE_FOLDER_ID, api_key)
+        procivis_files = list_drive_files(GDRIVE_PROCIVIS_FOLDER_ID, api_key)
+        ush_files = list_drive_files(GDRIVE_USH_FOLDER_ID, api_key)
 
-    if not drive_files:
+    if not drive_files and not procivis_files and not ush_files:
         st.info(
             "Aucun fichier trouve dans le dossier Google Drive.\n\n"
             "Les workflows N8N deposent les fichiers automatiquement."
         )
         return
 
-    # Indexer les PDF du Drive par nom de fichier
+    # Indexer les PDF Procivis par nom de fichier
     pdf_drive_index = {}
-    for f in drive_files:
+    for f in procivis_files:
         if f["name"].lower().endswith(".pdf"):
             pdf_drive_index[f["name"]] = f["id"]
+
+    # Indexer les PDF USH par nom de fichier
+    pdf_ush_index = {}
+    for f in ush_files:
+        if f["name"].lower().endswith(".pdf"):
+            pdf_ush_index[f["name"]] = f["id"]
 
     # ===== ONGLETS =====
     tab_veille, tab_ush, tab_compile = st.tabs([
